@@ -1,0 +1,82 @@
+      
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Registro de Chave</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f9f9f9; color: #333; }
+        .container { background-color: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 700px; margin: 20px auto; }
+        h1 { text-align: center; color: #0056b3; margin-bottom: 20px; }
+        form { display: flex; flex-direction: column; gap: 12px; padding: 20px; border: 1px solid #e0e0e0; border-radius: 5px; background-color: #fdfdfd; }
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        @media (min-width: 600px) {
+            .form-grid { grid-template-columns: 1fr 1fr; }
+        }
+        label { font-weight: bold; margin-bottom: 5px; display: block; }
+        input[type="text"], input[type="tel"], input[type="datetime-local"], textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; width: 100%; font-size: 1rem; }
+        textarea { resize: vertical; min-height: 80px; }
+        button { background-color: #28a745; color: white; padding: 10px 18px; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; transition: background-color 0.2s; }
+        button:hover { background-color: #1e7e34; }
+        .button-cancelar { background-color: #6c757d; margin-top: 10px; }
+        .button-cancelar:hover { background-color: #545b62; }
+        .alert { padding: 12px; margin-bottom: 18px; border-radius: 4px; border: 1px solid transparent; }
+        .alert-error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Editar Registro #{{ registro.id }}</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('editar_chave', id=registro.id) }}">
+            <div class="form-grid">
+                <div>
+                    <label for="nome_chave">Nome/Identificação da Chave:</label>
+                    <input type="text" id="nome_chave" name="nome_chave" value="{{ registro.nome_chave }}" required>
+                </div>
+                <div>
+                    <label for="nome_responsavel">Nome do Responsável:</label>
+                    <input type="text" id="nome_responsavel" name="nome_responsavel" value="{{ registro.nome_responsavel }}" required>
+                </div>
+                <div>
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" id="telefone" name="telefone" value="{{ registro.telefone if registro.telefone else '' }}">
+                </div>
+                <div>
+                    <label for="empresa">Empresa:</label>
+                    <input type="text" id="empresa" name="empresa" value="{{ registro.empresa if registro.empresa else '' }}">
+                </div>
+                <div>
+                    <label for="codigo_empresa">Código da Empresa:</label>
+                    <input type="text" id="codigo_empresa" name="codigo_empresa" value="{{ registro.codigo_empresa if registro.codigo_empresa else '' }}">
+                </div>
+                <div>
+                    <label for="data_hora_retirada">Data/Hora da Retirada:</label>
+                    <input type="datetime-local" id="data_hora_retirada" name="data_hora_retirada" value="{{ registro.data_hora_retirada_formato_input }}" required>
+                </div>
+                <div>
+                    <label for="data_hora_devolucao">Data/Hora da Devolução (deixe em branco se não devolvida):</label>
+                    <input type="datetime-local" id="data_hora_devolucao" name="data_hora_devolucao" value="{{ registro.data_hora_devolucao_formato_input if registro.data_hora_devolucao_formato_input else '' }}">
+                </div>
+            </div>
+            <div>
+                <label for="observacoes">Observações:</label>
+                <textarea id="observacoes" name="observacoes">{{ registro.observacoes if registro.observacoes else '' }}</textarea>
+            </div>
+            <button type="submit">Salvar Alterações</button>
+            <a href="{{ url_for('index') }}" class="button button-cancelar" style="text-align: center; text-decoration: none;">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>
+
+    
